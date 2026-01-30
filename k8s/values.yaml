@@ -22,8 +22,11 @@ ragflow:
   service:
     type: ClusterIP
 
-# Storage configuration using cluster storage classes
+# Infinity version must match RAGFlow's built-in client
+# RAGFlow v0.23.1 has infinity client 0.6.15
 infinity:
+  image:
+    tag: v0.6.0
   storage:
     className: ssd-fast
     capacity: 20Gi
