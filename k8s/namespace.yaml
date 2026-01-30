@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: snsq-ragflow
+  labels:
+    app.kubernetes.io/name: ragflow
+    app.kubernetes.io/part-of: snsq-ragflow
+    app.kubernetes.io/managed-by: argocd

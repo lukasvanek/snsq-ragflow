@@ -1,0 +1,34 @@
+name: Validate Manifests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Validate Helm chart
+        run: |
+          helm lint helm/
+          helm template ragflow helm/ -f k8s/values.yaml --namespace snsq-ragflow > /dev/null
+          echo "Helm chart valid"
+
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Validate kustomization
+        run: |
+          kustomize build k8s/ > /dev/null
+          echo "Kustomization valid"

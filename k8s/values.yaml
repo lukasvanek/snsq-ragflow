@@ -1,0 +1,65 @@
+# Custom values for RAGFlow deployment on sinesquare cluster
+# These override helm/values.yaml defaults
+
+env:
+  # Use Infinity as the doc engine (lighter than Elasticsearch)
+  DOC_ENGINE: infinity
+  
+  # Set timezone to UTC
+  TZ: "UTC"
+  
+  # Passwords - CHANGE THESE IN PRODUCTION
+  ELASTIC_PASSWORD: ragflow_elastic_pw
+  MYSQL_PASSWORD: ragflow_mysql_pw
+  MINIO_ROOT_USER: ragflow
+  MINIO_PASSWORD: ragflow_minio_pw
+  REDIS_PASSWORD: ragflow_redis_pw
+
+ragflow:
+  image:
+    tag: v0.23.1
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+
+# Storage configuration using cluster storage classes
+infinity:
+  storage:
+    className: ssd-fast
+    capacity: 20Gi
+
+mysql:
+  enabled: true
+  storage:
+    className: ssd-fast
+    capacity: 10Gi
+
+minio:
+  enabled: true
+  storage:
+    className: hdd-bulk
+    capacity: 50Gi
+
+redis:
+  enabled: true
+  storage:
+    className: ssd-fast
+    capacity: 5Gi
+  persistence:
+    enabled: true
+
+# Ingress configuration for Traefik
+ingress:
+  enabled: true
+  className: traefik
+  annotations: {}
+  hosts:
+    - host: ragflow.sinesquare.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: ragflow.sinesquare.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []

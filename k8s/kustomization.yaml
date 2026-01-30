@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: snsq-ragflow
+
+resources:
+  - namespace.yaml
+
+# ArgoCD will handle Helm chart deployment directly
+# This kustomization exists for ArgoCD ApplicationSet auto-discovery
+# The actual deployment uses helm/ directory with k8s/values.yaml overrides
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: snsq-ragflow
+      app.kubernetes.io/managed-by: argocd
