@@ -4,14 +4,14 @@
 env:
   # Use Infinity as the doc engine (lighter than Elasticsearch)
   DOC_ENGINE: infinity
-  
+
   # Set timezone to UTC
   TZ: "UTC"
-  
+
   # Passwords - CHANGE THESE IN PRODUCTION
   ELASTIC_PASSWORD: ragflow_elastic_pw
   MYSQL_PASSWORD: ragflow_mysql_pw
-  MINIO_ROOT_USER: ragflow
+  MINIO_ROOT_USER: rag_flow
   MINIO_PASSWORD: ragflow_minio_pw
   REDIS_PASSWORD: ragflow_redis_pw
 
@@ -21,6 +21,12 @@ ragflow:
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
+  # Override service_conf.yaml to fix MinIO credentials
+  service_conf:
+    minio:
+      user: 'rag_flow'
+      password: 'ragflow_minio_pw'
+      host: 'ragflow-minio.snsq-ragflow.svc:9000'
 
 # Infinity version must match RAGFlow's built-in client exactly
 # RAGFlow v0.23.1 has infinity client 0.6.15
